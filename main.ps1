@@ -4,25 +4,25 @@ param($servicesFilePath, $action)
 
 # checks for the first argument
 if ($null -eq $servicesFilePath) {
-    Write-Error "Please specify the services file path as a first parameter"
+    Write-Host "Please specify the services file path as a first parameter" -Fore 'red' -BackgroundColor 'black'
     Exit
 }
 
 if (!(Test-Path $servicesFilePath)) {
-    Write-Error "Services file not found in the giving path '$servicesFilePath'"
+    Write-Host "Services file not found in the giving path '$servicesFilePath'" -Fore 'red' -BackgroundColor 'black'
     Exit
 }
 
 # checks for the second argument
 if ($null -eq $action) {
-    Write-Error "Please specify the action you want to operate on the services"
+    Write-Host "Please specify the action you want to operate on the services" -Fore 'red' -BackgroundColor 'black'
     Exit
 }
 
 $supportedActions = @('start', 'stop', 'restart')
 
 if ($supportedActions -notcontains $action) {
-    Write-Error "Service action '$action' not supported"
+    Write-Host "Service action '$action' not supported" -Fore 'red' -BackgroundColor 'black'
     Exit
 }
 
