@@ -1,5 +1,10 @@
 param($servicesFilePath)
 
+if ($null -eq $servicesFilePath) {
+    Write-Error "Please specify the services file path as a first parameter"
+    Exit
+}
+
 if (!(Test-Path $servicesFilePath)) {
     Write-Error "Services file not found in the giving path '$servicesFilePath'"
     Exit
