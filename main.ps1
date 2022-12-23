@@ -17,11 +17,11 @@ while ($true) {
         if ($neededService) {
             Stop-Service -DisplayName $service
             if ($neededService.Status -eq 'Running') {
-                Write-Host "Error: Couldn't stop service $service"
+                Write-Warning "Could not stop service '$service'"
             }
         }
         else {
-            Write-Host "Warning: Service $service is either not running or not exist."
+            Write-Warning "Service '$service' is either not running or not exist."
         }
     }
 
