@@ -1,8 +1,12 @@
-$truckedServices = 
-    "Background Intelligent Transfer Service", 
-    "Delivery Optimization", 
-    "Windows Update", 
-    "Microsoft Office Click-to-Run Service"
+param($servicesFilePath)
+
+if (!(Test-Path $servicesFilePath)) {
+    Write-Error "Services file not found in the giving path '$servicesFilePath'"
+    Exit
+}
+
+$content = Get-Content -Path $servicesFilePath
+$truckedServices = $content -Split "\r\n"
 
 while ($true) {
     $runningServices = Get-Service | Where-Object { $_.Status -eq "Running" }

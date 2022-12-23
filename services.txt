@@ -1,0 +1,4 @@
+Background Intelligent Transfer Service
+Delivery Optimization
+Windows Update
+Microsoft Office Click-to-Run Service
