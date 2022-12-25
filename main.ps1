@@ -19,9 +19,7 @@ if ($null -eq $action) {
     Exit
 }
 
-$supportedActions = @('start', 'stop', 'restart')
-
-if ($supportedActions -notcontains $action) {
+if (@('start', 'stop', 'restart') -notcontains $action) {
     Write-Host "Service action '$action' not supported" -Fore 'red' -BackgroundColor 'black'
     Exit
 }
@@ -31,53 +29,52 @@ $content = Get-Content -Path $servicesFilePath
 $truckedServices = $content -Split "\r\n"
 
 while ($true) {
-    $runningServices = Get-Service
 
     foreach ($service in $truckedServices) {
-        $neededService = $runningServices | Where-Object { $_.DisplayName -eq $service }
+        $neededService = Get-Service | Where-Object { $_.DisplayName -eq $service }
 
-        if ($neededService) {
-            if ($action -eq 'start' -and $neededService.Status -eq 'Running') {
-                Write-Host "INFO: Service '$service' already running" -Fore 'Cyan' -BackgroundColor 'black'
-                continue
-            }
-
-            if ($action -eq 'stop' -and $neededService.Status -eq 'Stopped') {
-                Write-Host "INFO: Service '$service' already stopped" -Fore 'Cyan' -BackgroundColor 'black'
-                continue
-            }
-            
-            $uppercasedAction = (Get-Culture).TextInfo.ToTitleCase($($action).ToLower())
-
-            try {
-                invoke-expression "$uppercasedAction-Service -DisplayName '$service' -ErrorAction Stop"
-            } catch {
-                Write-Warning $_
-                continue
-            }
-
-            $neededService.Refresh()
-
-            # stop panding
-            if ($action -eq 'stop' -and $neededService.Status -eq 'StopPending') {
-                Write-Warning "Service '$service' is stop pending ..."
-                continue
-            }
-
-            # stop
-            if ($action -eq 'stop' -and $neededService.Status -eq 'Stopped') {
-                Write-Host "SUCCESS: Service '$service' stopped with success" -Fore 'green' -BackgroundColor 'black'
-                continue
-            }
-
-            # start
-            if ($action -eq 'start' -and $neededService.Status -eq 'Running') {
-                Write-Host "SUCCESS: Service '$service' started with success" -Fore 'green' -BackgroundColor 'black'
-                continue
-            }
-        }
-        else {
+        if (!($neededService)) {
             Write-Warning "Service '$service' is not exist"
+            continue
+        }
+
+        if ($action -eq 'start' -and $neededService.Status -eq 'Running') {
+            Write-Host "INFO: Service '$service' already running" -Fore 'Cyan' -BackgroundColor 'black'
+            continue
+        }
+
+        if ($action -eq 'stop' -and $neededService.Status -eq 'Stopped') {
+            Write-Host "INFO: Service '$service' already stopped" -Fore 'Cyan' -BackgroundColor 'black'
+            continue
+        }
+
+        try {
+            $uppercasedAction = (Get-Culture).TextInfo.ToTitleCase($($action).ToLower())
+            invoke-expression "$uppercasedAction-Service -DisplayName '$service' -ErrorAction Stop"
+        }
+        catch {
+            Write-Warning $_
+            continue
+        }
+
+        $neededService.Refresh()
+
+        # stop panding
+        if ($action -eq 'stop' -and $neededService.Status -eq 'StopPending') {
+            Write-Warning "Service '$service' is stop pending ..."
+            continue
+        }
+
+        # stop
+        if ($action -eq 'stop' -and $neededService.Status -eq 'Stopped') {
+            Write-Host "SUCCESS: Service '$service' stopped with success" -Fore 'green' -BackgroundColor 'black'
+            continue
+        }
+
+        # start
+        if ($action -eq 'start' -and $neededService.Status -eq 'Running') {
+            Write-Host "SUCCESS: Service '$service' started with success" -Fore 'green' -BackgroundColor 'black'
+            continue
         }
     }
 
