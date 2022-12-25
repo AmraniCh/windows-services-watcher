@@ -48,7 +48,13 @@ while ($true) {
             }
             
             $uppercasedAction = (Get-Culture).TextInfo.ToTitleCase($($action).ToLower())
-            invoke-expression "$uppercasedAction-Service -DisplayName '$service'"
+            
+            try {
+                invoke-expression "$uppercasedAction-Service -DisplayName '$service' -ErrorAction Stop"
+            } catch {
+                Write-Warning $_
+                continue
+            }
 
             $neededService.Refresh()
 
@@ -75,5 +81,5 @@ while ($true) {
         }
     }
 
-    start-sleep -seconds 10
+    start-sleep -seconds 1
 }
