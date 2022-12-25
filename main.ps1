@@ -1,6 +1,6 @@
 #Requires -RunAsAdministrator
 
-param($servicesFilePath, $action)
+param($servicesFilePath, $action, $interval = 1)
 
 # checks for the first argument
 if ($null -eq $servicesFilePath) {
@@ -48,7 +48,7 @@ while ($true) {
             }
             
             $uppercasedAction = (Get-Culture).TextInfo.ToTitleCase($($action).ToLower())
-            
+
             try {
                 invoke-expression "$uppercasedAction-Service -DisplayName '$service' -ErrorAction Stop"
             } catch {
@@ -81,5 +81,5 @@ while ($true) {
         }
     }
 
-    start-sleep -seconds 1
+    start-sleep -seconds $interval
 }
