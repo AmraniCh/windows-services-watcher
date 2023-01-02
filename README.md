@@ -5,8 +5,8 @@
 ## 🚀 Usage
 
 * Download the last released version from the [releases tab](https://github.com/AmraniCh/windows-services-watcher/releases).
-* Open the `services.txt` file and change the content with the services names you want to truck.
-* Open your powershell terminal **as an administrator**, navigate to the script directory and type:
+* Open the `services.txt` file and change the content with the services names you want to track.
+* Open your PowerShell terminal **as an administrator**, navigate to the script directory and type:
 
 ```console
 .\main.ps1 services.txt 'stop' 3
@@ -22,7 +22,7 @@
 | ---------------- | ----------- |
 | ServicesFilePath | Indicates the path of the file with your services list |
 | Action           | The action you want to operate on the services, it can be one of the following [start, stop, restart] |
-| Interval         | The interval time in seconds between each loop, default is *1*. |
+| Interval         | The interval time in seconds between each loop, default is **1 second**. |
 
 ## ©️ License
 
